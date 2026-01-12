@@ -35,7 +35,7 @@ spec:
 
     - id: read-file
       name: Read File
-      action: fs:parse
+      action: roadiehq:utils:fs:parse
       input:
         path: ./template.md
 
