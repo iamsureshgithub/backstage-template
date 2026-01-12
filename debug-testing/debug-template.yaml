@@ -35,7 +35,7 @@ spec:
 
     - id: read-file
       name: Read File
-      action: fs:read
+      action: fs:parse
       input:
         path: ./template.md
 
