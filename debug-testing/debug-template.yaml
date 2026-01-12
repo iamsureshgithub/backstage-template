@@ -26,11 +26,11 @@ spec:
     - id: fetch-template
       action: fetch:template
       input:
-        url: https://github.com/RoadieHQ/software-templates/tree/main/scaffolder-templates/debug-template/skeleton
-        templateFileExtension: true
+        url: ../python-app/template
+        #templateFileExtension: true
         values:
-          rfcNumber: ${{ parameters.rfcNumber }}
-          rfcTitle: ${{ parameters.rfcTitle }}
+          app_name: ${{ parameters.rfcNumber }}
+          app_env: ${{ parameters.rfcTitle }}
           abstract: ${{ parameters.abstract }}
 
     - id: read-file
