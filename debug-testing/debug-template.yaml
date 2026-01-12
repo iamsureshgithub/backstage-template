@@ -61,4 +61,4 @@ spec:
       name: Log Directory Message
       action: debug:log
       input:
-        message: ${{ steps['read-directory'].output.files }}
+        message: ${{ steps['read-directory'].output.files | dump(2) }}
