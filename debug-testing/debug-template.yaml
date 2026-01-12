@@ -9,7 +9,7 @@ spec:
   owner: group:default/engineering
   type: service
   parameters:
-    - title: Document front content
+    - title: Document front content1
       properties:
         rfcNumber:
           title: rfcNumber
@@ -21,6 +21,17 @@ spec:
           title: Document Abstract (optional draft version)
           type: string
           ui:widget: textarea
+    - title: Choose a location
+      required:
+        - repoUrl
+      properties:
+        repoUrl:
+          title: Repository Location
+          type: string
+          ui:field: RepoUrlPicker
+          ui:options:
+            allowedHosts:
+              - github.com
 
   steps:
     - id: fetch-template
