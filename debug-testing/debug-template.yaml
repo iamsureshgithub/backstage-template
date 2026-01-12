@@ -9,18 +9,24 @@ spec:
   owner: group:default/engineering
   type: service
   parameters:
-    - title: Document front content1
+    - title: Fill in some steps
+      required:
+        - name
       properties:
-        rfcNumber:
-          title: rfcNumber
+        name:
+          title: Name
           type: string
-        rfcTitle:
-          title: RFC Title
+          description: Unique name of the component
+          ui:field: EntityNamePicker
+          ui:autofocus: true
+        description:
+          title: Description
           type: string
-        abstract:
-          title: Document Abstract (optional draft version)
+          description: Description of the component
+        targetPath:
+          title: Target Path in repo
           type: string
-          ui:widget: textarea
+          description: Name of the directory to create in the repository
     - title: Choose a location
       required:
         - repoUrl
@@ -73,3 +79,16 @@ spec:
       action: debug:log
       input:
         message: ${{ steps['read-directory'].output.files | dump(2) }}
+        
+    - id: publish
+      name: Publish
+      action: publish:github:pull-request
+      input:
+        repoUrl: ${{ parameters.repoUrl }}
+        title: "Create new project: ${{parameters.name}}"
+        branchName: create-${{parameters.name}}
+        description: |
+          # New project: ${{parameters.name}}
+
+          ${{ parameters.description if parameters.description }}
+        targetPath: ${{ parameters.targetPath if parameters.targetPath else parameters.name }}
