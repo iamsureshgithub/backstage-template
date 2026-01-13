@@ -38,6 +38,12 @@ spec:
           ui:options:
             allowedHosts:
               - github.com
+            requestUserCredentials:
+              secretsKey: GITHUB_TOKEN          
+              additionalScopes:
+                github:
+                  - repo
+                  - workflow
 
   steps:
     - id: fetch-template
@@ -74,26 +80,52 @@ spec:
       input:
         seconds: 4        
 
+    # - id: log-directory-message
+      # name: Log Directory Message
+      # action: debug:log
+      # input:
+        # message: ${{ steps['read-directory'].output.files | dump(2) }}
+        
     - id: log-directory-message
       name: Log Directory Message
       action: debug:log
       input:
-        message: ${{ steps['read-directory'].output.files | dump(2) }}
+        message: ${{ (parameters.repoUrl | parseRepoUrl).owner }}/${{ (parameters.repoUrl | parseRepoUrl).repo }}
         
-    - id: publish
-      name: Publish
-      action: publish:github:pull-request
+    - id: check_repo_exists
+      name: Check if repository already exists
+      action: http:backstage:request
       input:
-        repoUrl: ${{ parameters.repoUrl }}
-        title: "Create new project: ${{parameters.name}}"
-        branchName: create-${{parameters.name}}
-        targetBranchName: main
-        description: |
-          # New project: ${{parameters.name}}
+        method: GET
+        url: https://api.github.com/repos/${{ (parameters.repoUrl | parseRepoUrl).owner }}/${{ (parameters.repoUrl | parseRepoUrl).repo }}
+        headers:
+          Accept: application/vnd.github.v3+json
+            # Optional: If you need higher rate limit / private repos
+          Authorization: token ${{ secrets.GITHUB_TOKEN }}
+            # Important: we want to continue even on 404
+        validStatusCodes: [200, 404]
+        
+    - id: fail_if_exists
+      name: Fail if repo already exists
+      action: debug:log
+      if: ${{ steps['check_repo_exists'].output.statusCode === 200 }}
+      input:
+        message: Repository ${{ (parameters.repoUrl | parseRepoUrl).owner }}/${{ (parameters.repoUrl | parseRepoUrl).repo }} already exists!
+        
+    # - id: publish
+      # name: Publish
+      # action: publish:github:pull-request
+      # input:
+        # repoUrl: ${{ parameters.repoUrl }}
+        # title: "Create new project: ${{parameters.name}}"
+        # branchName: create-${{parameters.name}}
+        # targetBranchName: main
+        # description: |
+          # # New project: ${{parameters.name}}
 
-          ${{ parameters.description if parameters.description }}
-        targetPath: ${{ parameters.targetPath if parameters.targetPath else parameters.name }}
-  output:
-    links:
-      - url: ${{steps.publish.output.remoteUrl}}
-        title: "Go to PR"
+          # ${{ parameters.description if parameters.description }}
+        # targetPath: ${{ parameters.targetPath if parameters.targetPath else parameters.name }}
+  # output:
+    # links:
+      # - url: ${{steps.publish.output.remoteUrl}}
+        # title: "Go to PR"
