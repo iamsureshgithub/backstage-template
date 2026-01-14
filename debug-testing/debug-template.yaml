@@ -105,6 +105,12 @@ spec:
         path: /proxy/github/api/repos/${{ (parameters.repoUrl | parseRepoUrl).owner }}/${{ (parameters.repoUrl | parseRepoUrl).repo }}
         headers:
           Accept: application/vnd.github.v3+json
+          
+    - id: log-repo-message
+      name: Repo Message
+      action: debug:log
+      input:
+        message: Status Code: ${{ steps['check_repo_exists'].output.statusCode }} || Body: ${{ steps['check_repo_exists'].output.body }} || Headers: ${{ steps['check_repo_exists'].output.headers }}
                     
     - id: fail_if_exists
       name: Fail if repo already exists
