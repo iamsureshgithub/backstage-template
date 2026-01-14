@@ -55,7 +55,12 @@ spec:
           app_name: ${{ parameters.rfcNumber }}
           app_env: ${{ parameters.rfcTitle }}
           abstract: ${{ parameters.abstract }}
-
+          
+    - id: debug List workspace
+      name: List workspace
+      action: debug:log
+      listWorkspace: true
+      
     - id: read-file
       name: Read File
       action: roadiehq:utils:fs:parse
@@ -97,14 +102,10 @@ spec:
       action: http:backstage:request
       input:
         method: GET
-        url: https://api.github.com/repos/${{ (parameters.repoUrl | parseRepoUrl).owner }}/${{ (parameters.repoUrl | parseRepoUrl).repo }}
+        path: /proxy/github/api/repos/${{ (parameters.repoUrl | parseRepoUrl).owner }}/${{ (parameters.repoUrl | parseRepoUrl).repo }}
         headers:
           Accept: application/vnd.github.v3+json
-            # Optional: If you need higher rate limit / private repos
-          Authorization: token ${{ secrets.GITHUB_TOKEN }}
-            # Important: we want to continue even on 404
-        validStatusCodes: [200, 404]
-        
+                    
     - id: fail_if_exists
       name: Fail if repo already exists
       action: debug:log
