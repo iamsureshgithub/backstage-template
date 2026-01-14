@@ -118,7 +118,7 @@ spec:
     - id: fail_if_exists
       name: Fail if repo already exists
       action: debug:log
-      if: ${{ steps['check_repo_exists'].output.statusCode === 200 }}
+      if: ${{ steps['check_repo_exists'].output.code === 200 }}
       input:
         message: Repository ${{ (parameters.repoUrl | parseRepoUrl).owner }}/${{ (parameters.repoUrl | parseRepoUrl).repo }} already exists!
         
