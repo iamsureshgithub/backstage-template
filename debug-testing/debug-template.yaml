@@ -112,9 +112,9 @@ spec:
       input:
         message: >-        
         Repository check result:        
-        • Status Code: ${{ steps['check_repo_exists'].output.statusCode }}
-        • Body: ${{ steps['check_repo_exists'].output.body | dump(2) }} 
-        • Headers: ${{ steps['check_repo_exists'].output.headers | dump(2)}}
+          Status Code: ${{ steps['check_repo_exists'].output.statusCode }}
+          Body: ${{ steps['check_repo_exists'].output.body | dump(2) }} 
+          Headers: ${{ steps['check_repo_exists'].output.headers | dump(2)}}
                     
     - id: fail_if_exists
       name: Fail if repo already exists
