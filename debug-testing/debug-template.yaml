@@ -111,7 +111,7 @@ spec:
       action: debug:log
       input:
         message: |                
-          Status Code: ${{ steps['check_repo_exists'].output.statusCode | dump(2) }}
+          Status Code: ${{ steps['check_repo_exists'].output.code | dump(2) }}
           Body: ${{ steps['check_repo_exists'].output.body | dump(2) }} 
           Headers: ${{ steps['check_repo_exists'].output.headers | dump(2)}}
                     
