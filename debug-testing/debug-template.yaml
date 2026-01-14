@@ -110,8 +110,7 @@ spec:
       name: Repo Message
       action: debug:log
       input:
-        message: >-        
-        Repository check result:        
+        message: |                
           Status Code: ${{ steps['check_repo_exists'].output.statusCode }}
           Body: ${{ steps['check_repo_exists'].output.body | dump(2) }} 
           Headers: ${{ steps['check_repo_exists'].output.headers | dump(2)}}
